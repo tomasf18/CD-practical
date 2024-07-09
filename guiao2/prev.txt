@@ -1,0 +1,58 @@
+class FingerTable:
+    """Finger Table."""
+
+    def __init__(self, node_id, node_addr, m_bits=10):
+        """ Initialize Finger Table."""
+        self.node_id = node_id          # ID do nó no anel
+        self.node_addr = node_addr      # Endereço do nó
+        self.m_bits = m_bits            # Número de bits a serem utilizados para o espaço de endereçamento do anel
+        
+        # O Chord Ring terá, no máximo, 2^m_bits nós, cujos id's variam de 0 a 2^m_bits-1
+        # A finger table de cada nó terá, no máximo, log2(m_bits) entradas
+        self.finger_table = []
+        self.finger_keyIdx = []
+
+        for i in range(self.m_bits):    # "Each node 'n' mantains a routing table with up to 'm' entries"
+            self.finger_table.append((node_id, node_addr))      # "The i(th) entry in the table at node 'n' contains the identuty of the first node 's' that succeeds 'n' by at least 2^i-1"
+            # "A finger table entry includes both the Chord identifier and the IP address of the relevant node"
+            keyIdx = (self.node_id + 2**i) % (2**self.m_bits)   # Mapear para o anel (N8 + i, Nó onde está armazenado o objeto com id=8+i)
+            self.finger_keyIdx.append(i+1, keyIdx)              # "i+1" porque começa em 1
+        pass
+
+    def fill(self, node_id, node_addr):
+        """ Fill all entries of finger_table with node_id, node_addr."""
+        for i in range(self.m_bits):
+            self.finger_table[i] = (node_id, node_addr)
+        pass
+
+    def update(self, index, node_id, node_addr):
+        """Update index of table with node_id and node_addr."""
+        self.finger_table[index] = (node_id, node_addr) # Ou index-1?
+        pass
+
+    def find(self, identification):
+        """ Get node address of closest preceding node (in finger table) of identification. """
+        for i in range(self.m_bits):
+            if self.finger_table[i][0] > identification:
+                return self.finger_table[i-1][0]
+        pass
+
+    def refresh(self):
+        """ Retrieve finger table entries requiring refresh."""
+        pass
+
+    def getIdxFromId(self, id):
+        for i in range(self.m_bits):
+            if self.finger_idx[i][1] == id:
+                return self.finger_keyIdx[i][0] # Retornar o índice da finger table que corresponde ao nó com id "id"
+        return None   
+
+    def __repr__(self):
+        pass
+
+    @property
+    def as_list(self):
+        """return the finger table as a list of tuples: (identifier, (host, port)).
+        NOTE: list index 0 corresponds to finger_table index 1
+        """
+        pass

@@ -1,0 +1,19 @@
+______________________________________________________________________
+|___Size_[2_bytes]___|___Serialization_[1_byte]___|___MessageData___|
+
+
+Subscribe Message
+"command" -> "subscribe"
+"topic" -> topic
+
+Publish Message
+"command" -> "publish"
+"topic" -> topic
+"message" -> value
+
+List Topics Message
+"command" -> "list"
+
+Cancel Subscription Message
+"command" -> "cancel"
+"topic" -> topic
